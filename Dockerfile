@@ -6,7 +6,6 @@ COPY --chown=root:root config.sh /
 RUN chmod 775 /config.sh
 #***********************************************
 RUN apt-get update -y && apt-get install -y \
-    openssl \
     zip \
     unzip \
     git \
@@ -17,16 +16,15 @@ RUN apt-get update -y && apt-get install -y \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
     locales \
-    zip \
     jpegoptim optipng pngquant gifsicle \
-    unzip \
     git \
     nano \
     curl
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install extensions
-RUN docker-php-ext-install pdo pdo_pgsql pgsql zip && \
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql && \
+    docker-php-ext-install pdo pdo_pgsql pgsql zip && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \ 
     docker-php-ext-install gd && \
     ln -fs /usr/share/zoneinfo/America/Rio_Branco /etc/localtime && \
